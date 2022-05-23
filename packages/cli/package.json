@@ -1,0 +1,13 @@
+{
+  "name": "@vdmin/cli",
+  "version": "1.0.0",
+  "description": "Vdmin cli.",
+  "bin": {
+    "vdmin": "bin/vdmin.js"
+  },
+  "main": "index.js",
+  "files": ["bin", "lib"],
+  "scripts": {
+    "dev": "node scripts/watch.js"
+  }
+}

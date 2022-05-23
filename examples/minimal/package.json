@@ -1,0 +1,9 @@
+{
+  "name": "vdmin-example-minimal",
+  "scripts": {
+    "test": "vdmin"
+  },
+  "dependencies": {
+    "@vdmin/cli": "*"
+  }
+}

@@ -7,7 +7,7 @@
   },
   "main": "index.js",
   "files": ["bin", "lib"],
-  "scripts": {
-    "dev": "node scripts/watch.js"
+  "dependencies": {
+    "commander": "^9.2.0"
   }
 }

@@ -1,6 +1,8 @@
-export default {
+module.exports = {
   name: 'minimal',
-  docs: {
+  site: {
+    title: "Vdmin Docs",
+    description: "一个项目文档",
     nav: [
       {
         title: '开发指南',

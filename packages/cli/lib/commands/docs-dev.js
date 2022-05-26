@@ -1,4 +1,7 @@
+const { setNodeEnv } = require('../common/index');
+const compileDocsSite = require('../compiler/compile-docs-site');
 
-module.exports = function docsDev() {
-  console.log('Hello world!');
+module.exports = async function docsDev() {
+  setNodeEnv('development');
+  await compileDocsSite();
 }

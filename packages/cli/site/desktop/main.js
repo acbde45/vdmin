@@ -1,10 +1,10 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 // import DemoPlayground from './components/DemoPlayground.vue';
-// import { router } from './router';
+import { router } from './router';
 
 window.app = createApp(App)
-  // .use(router)
+  .use(router)
   // .component(DemoPlayground.name, DemoPlayground);
 
 setTimeout(() => {

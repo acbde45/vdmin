@@ -1,10 +1,13 @@
+const { join } = require('path');
 const vitePluginMd = require('vite-plugin-md').default;
 const vitePluginVue = require('@vitejs/plugin-vue');
 const vitePluginJsx = require('@vitejs/plugin-vue-jsx');
-const { createHtmlPlugin } = require('vite-plugin-html');
+const { injectHtml } = require('vite-plugin-html');
 const hljs = require('highlight.js');
 const { setBuildTarget, getVdminConfig, isDev } = require('../common/index');
 const { SITE_SRC_DIR } = require('../common/constants');
+const genSiteMobileShared = require('../compiler/gen-site-mobile-shared');
+const genSiteDesktopShared = require('../compiler/gen-site-desktop-shared');
 
 function markdownHighlight(str, lang) {
   if (lang && hljs.getLanguage(lang)) {
@@ -48,6 +51,25 @@ function getHTMLMeta(config) {
   return '';
 }
 
+// add target="_blank" to all links
+function markdownLinkOpen(md) {
+  const defaultRender = md.renderer.rules.link_open;
+
+  md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+    const aIndex = tokens[idx].attrIndex('target');
+
+    if (aIndex < 0) {
+      tokens[idx].attrPush(['target', '_blank']); // add new attribute
+    }
+
+    if (defaultRender) {
+      return defaultRender(tokens, idx, options, env, self);
+    }
+
+    return self.renderToken(tokens, idx, options);
+  };
+}
+
 function markdownCardWrapper(htmlCode) {
   const group = htmlCode
     .replace(/<h3/g, ':::<h3')
@@ -65,6 +87,37 @@ function markdownCardWrapper(htmlCode) {
     .join('');
 }
 
+function vitePluginGenVdminBaseCode() {
+  const virtualMobileModuleId = 'site-mobile-shared';
+  const resolvedMobileVirtualModuleId = `vdmin-cli:${virtualMobileModuleId}`;
+
+  const virtualDesktopModuleId = 'site-desktop-shared';
+  const resolvedDesktopVirtualModuleId = `vdmin-cli:${virtualDesktopModuleId}`;
+
+  return {
+    name: 'vite-plugin(vdmin-cli):gen-site-base-code',
+    resolveId(id) {
+      if (id === virtualMobileModuleId) {
+        return resolvedMobileVirtualModuleId;
+      }
+
+      if (id === virtualDesktopModuleId) {
+        return resolvedDesktopVirtualModuleId;
+      }
+    },
+    load(id) {
+      switch (id) {
+        case resolvedMobileVirtualModuleId:
+          return genSiteMobileShared();
+        case resolvedDesktopVirtualModuleId:
+          return genSiteDesktopShared();
+        default:
+          break;
+      }
+    },
+  };
+}
+
 function getViteConfigForSiteDev() {
   setBuildTarget('site');
 
@@ -77,7 +130,7 @@ function getViteConfigForSiteDev() {
     root: SITE_SRC_DIR,
 
     plugins: [
-      // vitePluginGenVantBaseCode(),
+      vitePluginGenVdminBaseCode(),
       vitePluginVue({
         include: [/\.vue$/, /\.md$/],
       }),
@@ -103,17 +156,15 @@ function getViteConfigForSiteDev() {
         },
       }),
       vitePluginJsx(),
-      createHtmlPlugin({
-        inject: {
-          data: {
-            ...siteConfig,
-            title,
-            // `description` is used by the HTML ejs template,
-            // so it needs to be written explicitly here to avoid error: description is not defined
-            description: siteConfig?.description,
-            enableVConsole,
-            meta: getHTMLMeta(vdminConfig),
-          },
+      injectHtml({
+        data: {
+          ...siteConfig,
+          title,
+          // `description` is used by the HTML ejs template,
+          // so it needs to be written explicitly here to avoid error: description is not defined
+          description: siteConfig?.description,
+          enableVConsole,
+          meta: getHTMLMeta(vdminConfig),
         },
       }),
     ],

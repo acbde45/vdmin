@@ -1,8 +1,13 @@
+import BreadCrumb from "./src/components/breadcrumb.vue";
+
 module.exports = {
   name: 'minimal',
   site: {
     title: "Vdmin Docs",
     description: "一个项目文档",
+    enhanceApp({ app }) {
+      app.component('BreadCrumb', BreadCrumb)
+    },
     nav: [
       {
         title: '开发指南',

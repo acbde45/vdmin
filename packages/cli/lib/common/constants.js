@@ -1,8 +1,9 @@
 const { existsSync, readFileSync } = require('fs-extra');
 const { join, dirname } = require('path');
+const { pathToFileURL } = require('url');
 
 function findRootDir(dir) {
-  if (existsSync(join(dir, 'vdmin.config.js'))) {
+  if (existsSync(join(dir, 'vdmin.config.mjs'))) {
     return dir;
   }
 
@@ -18,7 +19,7 @@ function findRootDir(dir) {
 const CWD = process.cwd();
 const ROOT = findRootDir(CWD);
 const DOCS_DIR = join(ROOT, 'docs');
-const VDMIN_CONFIG_FILE = join(ROOT, 'vdmin.config.js');
+const VDMIN_CONFIG_FILE = join(ROOT, 'vdmin.config.mjs');
 const PACKAGE_JSON_FILE = join(ROOT, 'package.json');
 
 // Relative paths
@@ -29,10 +30,20 @@ function getPackageJson() {
   return JSON.parse(rawJson);
 }
 
+async function getVantConfigAsync() {
+  try {
+      // https://github.com/nodejs/node/issues/31710
+      // absolute file paths don't work on Windows
+      return (await import(pathToFileURL(VANT_CONFIG_FILE).href)).default;
+  }
+  catch (err) {
+      return {};
+  }
+}
 let vdminConfig;
-function getVdminConfig() {
+async function getVdminConfig() {
   if (!vdminConfig) {
-    vdminConfig = require(VDMIN_CONFIG_FILE);
+    vdminConfig = await getVantConfigAsync();
   }
   return vdminConfig;
 }

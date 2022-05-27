@@ -77,6 +77,7 @@ function genExportVersion() {
 function genSiteDesktopShared() {
   const dirs = readdirSync(SRC_DIR);
   const documents = resolveDocuments(dirs);
+  console.log(documents);
 
   const code = `${genImportDocuments(documents)}
 

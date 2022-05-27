@@ -1,8 +1,8 @@
-const { Command } = require('commander');
+import { Command } from 'commander';
 
-const {
+import {
   docsDev
-} = require('./index');
+} from './index.js';
 
 const program = new Command();
 

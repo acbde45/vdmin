@@ -1,9 +1,9 @@
-const { existsSync, readFileSync } = require('fs-extra');
-const { join, dirname } = require('path');
-const { pathToFileURL } = require('url');
+import fse from 'fs-extra';
+import { join, dirname, isAbsolute } from 'path';
+import { pathToFileURL, fileURLToPath } from 'url';
 
 function findRootDir(dir) {
-  if (existsSync(join(dir, 'vdmin.config.mjs'))) {
+  if (fse.existsSync(join(dir, 'vdmin.config.mjs'))) {
     return dir;
   }
 
@@ -16,35 +16,35 @@ function findRootDir(dir) {
 }
 
 // Root paths
-const CWD = process.cwd();
-const ROOT = findRootDir(CWD);
-const DOCS_DIR = join(ROOT, 'docs');
-const VDMIN_CONFIG_FILE = join(ROOT, 'vdmin.config.mjs');
-const PACKAGE_JSON_FILE = join(ROOT, 'package.json');
+export const CWD = process.cwd();
+export const ROOT = findRootDir(CWD);
+export const DOCS_DIR = join(ROOT, 'docs');
+export const VDMIN_CONFIG_FILE = join(ROOT, 'vdmin.config.mjs');
+export const PACKAGE_JSON_FILE = join(ROOT, 'package.json');
 
 // Relative paths
-const SITE_SRC_DIR = join(__dirname, '..', '..', 'site');
+const __dirname = dirname(fileURLToPath(import.meta.url));
+export const SITE_SRC_DIR = join(__dirname, '..', '..', 'site');
 
-function getPackageJson() {
-  const rawJson = readFileSync(PACKAGE_JSON_FILE, 'utf-8');
+export function getPackageJson() {
+  const rawJson = fse.readFileSync(PACKAGE_JSON_FILE, 'utf-8');
   return JSON.parse(rawJson);
 }
 
 async function getVantConfigAsync() {
   try {
-      // https://github.com/nodejs/node/issues/31710
-      // absolute file paths don't work on Windows
-      return (await import(pathToFileURL(VANT_CONFIG_FILE).href)).default;
+    // https://github.com/nodejs/node/issues/31710
+    // absolute file paths don't work on Windows
+    return (await import(pathToFileURL(VDMIN_CONFIG_FILE).href)).default;
   }
   catch (err) {
-      return {};
+    return {};
   }
 }
-let vdminConfig;
-async function getVdminConfig() {
-  if (!vdminConfig) {
-    vdminConfig = await getVantConfigAsync();
-  }
+
+const vdminConfig = await getVantConfigAsync();
+
+export function getVdminConfig() {
   return vdminConfig;
 }
 
@@ -63,16 +63,4 @@ function getSrcDir() {
   return join(ROOT, 'src');
 }
 
-const SRC_DIR = getSrcDir();
-
-module.exports = {
-  CWD,
-  ROOT,
-  DOCS_DIR,
-  PACKAGE_JSON_FILE,
-  VDMIN_CONFIG_FILE,
-  SITE_SRC_DIR,
-  SRC_DIR,
-  getPackageJson,
-  getVdminConfig,
-};
+export const SRC_DIR = getSrcDir();

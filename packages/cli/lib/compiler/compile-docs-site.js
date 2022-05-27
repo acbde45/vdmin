@@ -1,11 +1,12 @@
-const chalk = require('chalk');
-const { createServer } = require('vite');
-const {
+import { createRequire } from "module";
+import chalk from 'chalk';
+import { createServer } from 'vite';
+import {
   getViteConfigForSiteDev,
-} = require('../config/vite.site.js');
-const { mergeCustomViteConfig } = require('../common/index.js');
+} from '../config/vite.site.js';
+import { mergeCustomViteConfig } from '../common/index.js';
 
-module.exports = async function compileDocsSite(production = false) {
+export default async function compileDocsSite(production = false) {
   if (production) {
     // build
   } else {
@@ -13,6 +14,7 @@ module.exports = async function compileDocsSite(production = false) {
     const server = await createServer(config);
     await server.listen();
 
+    const require = createRequire(import.meta.url);
     const { version } = require('vite/package.json');
     const viteInfo = chalk.cyan(`vite v${version}`);
     console.log(`\n  ${viteInfo}` + chalk.green(` dev server running at:\n`));

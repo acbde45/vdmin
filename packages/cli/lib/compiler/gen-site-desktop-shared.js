@@ -1,18 +1,16 @@
-const globby = require('globby');
-const { join, parse } = require('path');
-const { existsSync, readFileSync, readdirSync } = require('fs-extra');
-const {
+import { join } from 'path';
+import fse from 'fs-extra';
+import {
   isDev,
   pascalize,
   normalizePath,
-} = require('../common/index');
-const {
-  SRC_DIR,
+} from '../common/index.js';
+import {
   DOCS_DIR,
   getPackageJson,
+  getVdminConfig,
   VDMIN_CONFIG_FILE,
-} = require('../common/constants');
-const { dir } = require('console');
+} from '../common/constants.js';
 
 function formatName(component) {
   component = pascalize(component);
@@ -20,27 +18,41 @@ function formatName(component) {
   return component;
 }
 
-function resolveDocuments(components) {
+function resolveDocuments(nav) {
   const docs = [];
 
-  components.forEach((component) => {
-    docs.push({
-      name: formatName(component),
-      path: join(DOCS_DIR, component, 'README.md'),
+  nav.forEach(group => {
+    group.items.forEach(item => {
+      docs.push({
+        name: formatName(item.path),
+        path: join(DOCS_DIR, group, item.path, 'README.md'),
+      }, {
+        name: formatName(item.path),
+        path: join(DOCS_DIR, group, item.path + '.md'),
+      });
     });
   });
 
-  const staticDocs = globby
-    .sync(normalizePath(join(DOCS_DIR, '**/*.md')))
-    .map((path) => {
-      const name = parse(path).name;
-      return {
-        name: formatName(name),
-        path,
-      };
-    });
+  return [...docs.filter((item) => fse.existsSync(item.path))];
 
-  return [...staticDocs, ...docs.filter((item) => existsSync(item.path))];
+  // components.forEach((component) => {
+  //   docs.push({
+  //     name: formatName(component),
+  //     path: join(DOCS_DIR, component, 'README.md'),
+  //   });
+  // });
+
+  // const staticDocs = globby
+  //   .sync(normalizePath(join(DOCS_DIR, '**/*.md')))
+  //   .map((path) => {
+  //     const name = parse(path).name;
+  //     return {
+  //       name: formatName(name),
+  //       path,
+  //     };
+  //   });
+
+  // return [...staticDocs, ...docs.filter((item) => fse.existsSync(item.path))];
 }
 
 function genImportDocuments(items) {
@@ -62,7 +74,7 @@ function genExportDocuments(items) {
 }
 
 function genVantConfigContent() {
-  const content = readFileSync(VDMIN_CONFIG_FILE, 'utf-8');
+  const content = fse.readFileSync(VDMIN_CONFIG_FILE, 'utf-8');
   return content.replace('module.exports =', 'const config =');
 }
 
@@ -74,9 +86,11 @@ function genExportVersion() {
   return `export const packageVersion = '${getPackageJson().version}';`;
 }
 
-function genSiteDesktopShared() {
-  const dirs = readdirSync(SRC_DIR);
-  const documents = resolveDocuments(dirs);
+export default async function genSiteDesktopShared() {
+  const vdminConfig = await getVdminConfig();
+  const documents = resolveDocuments(vdminConfig.site?.nav || []);
+
+  console.log(vdminConfig);
   console.log(documents);
 
   const code = `${genImportDocuments(documents)}
@@ -90,5 +104,3 @@ ${genExportVersion()}
 
   return code;
 }
-
-module.exports = genSiteDesktopShared;

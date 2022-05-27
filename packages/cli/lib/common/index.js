@@ -1,43 +1,47 @@
-const { getVdminConfig } = require('./constants');
+import { getVdminConfig } from './constants.js';
 
-function setNodeEnv(value) {
+export function setNodeEnv(value) {
   process.env.NODE_ENV = value;
 }
 
-function setBuildTarget(value) {
+export function setBuildTarget(value) {
   process.env.BUILD_TARGET = value;
 }
 
-function isDev() {
+export function isDev() {
   return process.env.NODE_ENV === 'development';
 }
 
-const camelizeRE = /-(\w)/g;
-const pascalizeRE = /(\w)(\w*)/g;
+export function removeExt(path) {
+  return path.replace('.js', '');
+}
 
-function camelize(str) {
+export const camelizeRE = /-(\w)/g;
+export const pascalizeRE = /(\w)(\w*)/g;
+
+export function camelize(str) {
   return str.replace(camelizeRE, (_, c) => c.toUpperCase());
 }
 
-function pascalize(str) {
+export function pascalize(str) {
   return camelize(str).replace(
     pascalizeRE,
     (_, c1, c2) => c1.toUpperCase() + c2
   );
 }
 
-function decamelize(str, sep = '-') {
+export function decamelize(str, sep = '-') {
   return str
     .replace(/([a-z\d])([A-Z])/g, '$1' + sep + '$2')
     .replace(/([A-Z])([A-Z][a-z\d]+)/g, '$1' + sep + '$2')
     .toLowerCase();
 }
 
-function normalizePath(path) {
+export function normalizePath(path) {
   return path.replace(/\\/g, '/');
 }
 
-function mergeCustomViteConfig(config) {
+export function mergeCustomViteConfig(config) {
   const vdminConfig = getVdminConfig();
   const configureVite = vdminConfig.build?.configureVite;
 
@@ -47,14 +51,4 @@ function mergeCustomViteConfig(config) {
   return config;
 }
 
-module.exports = {
-  setNodeEnv,
-  setBuildTarget,
-  isDev,
-  camelize,
-  pascalize,
-  decamelize,
-  normalizePath,
-  mergeCustomViteConfig,
-  getVdminConfig,
-};
+export { getVdminConfig };

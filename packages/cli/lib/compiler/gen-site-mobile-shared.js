@@ -1,13 +1,13 @@
-const { join } = require('path');
-const { existsSync, readdirSync } = require('fs-extra');
-const { SRC_DIR } = require('../common/constants');
-const {
+import { join } from 'path';
+import fse from 'fs-extra';
+import { SRC_DIR } from '../common/constants.js';
+import {
   pascalize,
   removeExt,
   decamelize,
   getVdminConfig,
   normalizePath,
-} = require('../common/index');
+} from '../common/index.js';
 
 function genImports(demos) {
   return demos
@@ -52,7 +52,7 @@ function genCode(components) {
       name: pascalize(component),
       path: join(SRC_DIR, component, 'demo/index.vue'),
     }))
-    .filter((item) => existsSync(item.path));
+    .filter((item) => fse.existsSync(item.path));
 
   return `${genImports(demos)}
 
@@ -61,11 +61,9 @@ ${genConfig(demos)}
 `;
 }
 
-function genSiteMobileShared() {
-  const dirs = readdirSync(SRC_DIR);
+export default function genSiteMobileShared() {
+  const dirs = fse.readdirSync(SRC_DIR);
   const code = genCode(dirs);
 
   return code;
 }
-
-module.exports = genSiteMobileShared;

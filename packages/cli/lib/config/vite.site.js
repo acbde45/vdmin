@@ -1,13 +1,13 @@
-const { join } = require('path');
-const vitePluginMd = require('vite-plugin-md').default;
-const vitePluginVue = require('@vitejs/plugin-vue');
-const vitePluginJsx = require('@vitejs/plugin-vue-jsx');
-const { injectHtml } = require('vite-plugin-html');
-const hljs = require('highlight.js');
-const { setBuildTarget, getVdminConfig, isDev } = require('../common/index');
-const { SITE_SRC_DIR } = require('../common/constants');
-const genSiteMobileShared = require('../compiler/gen-site-mobile-shared');
-const genSiteDesktopShared = require('../compiler/gen-site-desktop-shared');
+import { createRequire } from 'module';
+import vitePluginMd from 'vite-plugin-md';
+import vitePluginVue from '@vitejs/plugin-vue';
+import vitePluginJsx from '@vitejs/plugin-vue-jsx';
+import { injectHtml } from 'vite-plugin-html';
+import hljs from 'highlight.js';
+import { setBuildTarget, getVdminConfig, isDev } from '../common/index.js';
+import { SITE_SRC_DIR } from '../common/constants.js';
+import genSiteMobileShared from '../compiler/gen-site-mobile-shared.js';
+import genSiteDesktopShared from '../compiler/gen-site-desktop-shared.js';
 
 function markdownHighlight(str, lang) {
   if (lang && hljs.getLanguage(lang)) {
@@ -118,7 +118,7 @@ function vitePluginGenVdminBaseCode() {
   };
 }
 
-function getViteConfigForSiteDev() {
+export function getViteConfigForSiteDev() {
   setBuildTarget('site');
 
   const vdminConfig = getVdminConfig();
@@ -144,6 +144,7 @@ function getViteConfigForSiteDev() {
           highlight: markdownHighlight,
         },
         markdownItSetup(md) {
+          const require = createRequire(import.meta.url);
           const { slugify } = require('transliteration');
           const markdownItAnchor = require('markdown-it-anchor');
 
@@ -174,7 +175,3 @@ function getViteConfigForSiteDev() {
     },
   };
 }
-
-module.exports = {
-  getViteConfigForSiteDev,
-};

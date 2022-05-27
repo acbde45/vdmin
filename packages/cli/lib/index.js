@@ -1,5 +1,3 @@
-const docsDev = require('./commands/docs-dev');
+import docsDev from './commands/docs-dev.js';
 
-module.exports = {
-  docsDev,
-};
+export { docsDev };

@@ -1,7 +1,7 @@
-const { setNodeEnv } = require('../common/index');
-const compileDocsSite = require('../compiler/compile-docs-site');
+import { setNodeEnv } from '../common/index.js';
+import compileDocsSite from '../compiler/compile-docs-site.js';
 
-module.exports = async function docsDev() {
+export default async function docsDev() {
   setNodeEnv('development');
   await compileDocsSite();
 }

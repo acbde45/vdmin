@@ -1,9 +1,21 @@
-import fse from 'fs-extra';
-import { join, dirname, isAbsolute } from 'path';
-import { pathToFileURL, fileURLToPath } from 'url';
+import fse from "fs-extra";
+import { join, dirname, isAbsolute } from "path";
+import { fileURLToPath } from "url";
+import { loadConfigFromFile } from "vite";
 
-function findRootDir(dir) {
-  if (fse.existsSync(join(dir, 'vdmin.config.mjs'))) {
+const supportedConfigExtensions = ['js', 'ts', 'mjs', 'mts'];
+const supportedDocsConfigExtensions = ['js', 'ts'];
+
+async function findRootDir(dir) {
+  let configPath
+  for (const ext of supportedConfigExtensions) {
+    const p = join(dir, `vdmin.config.${ext}`)
+    if (await fse.pathExists(p)) {
+      configPath = p
+      break
+    }
+  }
+  if (configPath) {
     return dir;
   }
 
@@ -15,34 +27,56 @@ function findRootDir(dir) {
   return findRootDir(parentDir);
 }
 
+async function findDocsConfigFile(dir, fileName) {
+  let configPath
+  for (const ext of supportedConfigExtensions) {
+    const p = join(dir, `${fileName}.${ext}`)
+    if (await fse.pathExists(p)) {
+      configPath = p
+      break
+    }
+  }
+  if (configPath) {
+    return configPath;
+  }
+  return '';
+}
+
 // Root paths
 export const CWD = process.cwd();
-export const ROOT = findRootDir(CWD);
-export const DOCS_DIR = join(ROOT, 'docs');
-export const VDMIN_CONFIG_FILE = join(ROOT, 'vdmin.config.mjs');
-export const PACKAGE_JSON_FILE = join(ROOT, 'package.json');
+export const ROOT = await findRootDir(CWD);
+export const DOCS_DIR = join(ROOT, "docs");
+export const THEME_FILE = await findDocsConfigFile(DOCS_DIR, "theme");
+export const PACKAGE_JSON_FILE = join(ROOT, "package.json");
 
 // Relative paths
 const __dirname = dirname(fileURLToPath(import.meta.url));
-export const SITE_SRC_DIR = join(__dirname, '..', '..', 'site');
+export const SITE_SRC_DIR = join(__dirname, "..", "..", "site");
 
 export function getPackageJson() {
-  const rawJson = fse.readFileSync(PACKAGE_JSON_FILE, 'utf-8');
+  const rawJson = fse.readFileSync(PACKAGE_JSON_FILE, "utf-8");
   return JSON.parse(rawJson);
 }
 
-async function getVantConfigAsync() {
+async function getVdminConfigAsync() {
   try {
-    // https://github.com/nodejs/node/issues/31710
-    // absolute file paths don't work on Windows
-    return (await import(pathToFileURL(VDMIN_CONFIG_FILE).href)).default;
-  }
-  catch (err) {
+    // load user config
+    let configPath
+    for (const ext of supportedConfigExtensions) {
+      const p = join(ROOT, `vdmin.config.${ext}`)
+      if (await fse.pathExists(p)) {
+        configPath = p
+        break
+      }
+    }
+    const result = await loadConfigFromFile({}, configPath, ROOT);
+    return result.config;
+  } catch (err) {
     return {};
   }
 }
 
-const vdminConfig = await getVantConfigAsync();
+const vdminConfig = await getVdminConfigAsync();
 
 export function getVdminConfig() {
   return vdminConfig;
@@ -60,7 +94,7 @@ function getSrcDir() {
     return join(ROOT, srcDir);
   }
 
-  return join(ROOT, 'src');
+  return join(ROOT, "src");
 }
 
 export const SRC_DIR = getSrcDir();

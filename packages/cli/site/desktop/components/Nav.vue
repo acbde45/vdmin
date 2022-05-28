@@ -22,10 +22,10 @@
 </template>
 
 <script>
-import NavLink from './NavLink.vue';
+import NavLink from "./NavLink.vue";
 
 export default {
-  name: 'Nav',
+  name: "Nav",
 
   components: {
     [NavLink.name]: NavLink,
@@ -46,18 +46,18 @@ export default {
   computed: {
     style() {
       return {
-        top: this.top + 'px',
-        bottom: this.bottom + 'px',
+        top: this.top + "px",
+        bottom: this.bottom + "px",
       };
     },
 
     base() {
-      return this.lang ? `/${this.lang}/` : '/';
+      return this.lang ? `/${this.lang}/` : "/";
     },
   },
 
   created() {
-    window.addEventListener('scroll', this.onScroll);
+    window.addEventListener("scroll", this.onScroll);
     this.onScroll();
   },
 
@@ -73,7 +73,7 @@ export default {
 <style lang="scss">
 @use "sass:math";
 
-@import '../../common/style/var';
+@import "../../common/style/var";
 
 .vdmin-doc-nav {
   position: fixed;
@@ -85,11 +85,6 @@ export default {
   overflow-y: scroll;
   background-color: #fff;
   box-shadow: 0 8px 12px #ebedf0;
-
-  @media (min-width: $--vdmin-doc-row-max-width) {
-    left: 50%;
-    margin-left: math.div(-$--vdmin-doc-row-max-width, 2);
-  }
 
   &::-webkit-scrollbar {
     width: 6px;

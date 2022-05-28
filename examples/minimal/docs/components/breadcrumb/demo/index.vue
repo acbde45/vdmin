@@ -1,5 +1,5 @@
 <template>
-  <BreadCrumb :paths="paths" />
+  <Breadcrumb :paths="paths" />
 </template>
 
 <script setup>

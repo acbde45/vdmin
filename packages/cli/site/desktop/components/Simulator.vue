@@ -1,12 +1,14 @@
 <template>
-  <div :class="['vdmin-doc-simulator', { 'vdmin-doc-simulator-fixed': isFixed }]">
+  <div
+    :class="['vdmin-doc-simulator', { 'vdmin-doc-simulator-fixed': isFixed }]"
+  >
     <iframe ref="iframe" :src="src" :style="simulatorStyle" frameborder="0" />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Simulator',
+  name: "Simulator",
 
   props: {
     src: String,
@@ -27,16 +29,16 @@ export default {
     simulatorStyle() {
       const height = Math.min(640, this.windowHeight - 90);
       return {
-        height: height + 'px',
+        height: height + "px",
       };
     },
   },
 
   mounted() {
-    window.addEventListener('scroll', () => {
+    window.addEventListener("scroll", () => {
       this.scrollTop = window.scrollY;
     });
-    window.addEventListener('resize', () => {
+    window.addEventListener("resize", () => {
       this.windowHeight = window.innerHeight;
     });
   },
@@ -46,11 +48,12 @@ export default {
 <style lang="scss">
 @use "sass:math";
 
-@import '../../common/style/var.scss';
+@import "../../common/style/var.scss";
 
 .vdmin-doc-simulator {
   position: absolute;
   top: $--vdmin-doc-padding + $--vdmin-doc-header-top-height;
+  bottom: $--vdmin-doc-padding;
   right: $--vdmin-doc-padding;
   z-index: 1;
   box-sizing: border-box;
@@ -66,11 +69,6 @@ export default {
     left: 750px;
   }
 
-  @media (min-width: $--vdmin-doc-row-max-width) {
-    right: 50%;
-    margin-right: 24px - math.div($--vdmin-doc-row-max-width, 2);
-  }
-
   &-fixed {
     position: fixed;
     top: $--vdmin-doc-padding;
@@ -82,4 +80,3 @@ export default {
   }
 }
 </style>
-

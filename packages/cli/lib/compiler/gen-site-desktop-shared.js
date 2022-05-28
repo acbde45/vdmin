@@ -1,15 +1,11 @@
 import { join } from 'path';
 import fse from 'fs-extra';
-import {
-  isDev,
-  pascalize,
-  normalizePath,
-} from '../common/index.js';
+import { isDev, pascalize, normalizePath } from '../common/index.js';
 import {
   DOCS_DIR,
+  THEME_FILE,
   getPackageJson,
   getVdminConfig,
-  VDMIN_CONFIG_FILE,
 } from '../common/constants.js';
 
 function formatName(component) {
@@ -21,38 +17,22 @@ function formatName(component) {
 function resolveDocuments(nav) {
   const docs = [];
 
-  nav.forEach(group => {
-    group.items.forEach(item => {
-      docs.push({
-        name: formatName(item.path),
-        path: join(DOCS_DIR, group, item.path, 'README.md'),
-      }, {
-        name: formatName(item.path),
-        path: join(DOCS_DIR, group, item.path + '.md'),
-      });
+  nav.forEach((group) => {
+    group.items.forEach((item) => {
+      docs.push(
+        {
+          name: formatName(item.path),
+          path: join(DOCS_DIR, group.group, item.path, 'README.md'),
+        },
+        {
+          name: formatName(item.path),
+          path: join(DOCS_DIR, group.group, item.path + '.md'),
+        }
+      );
     });
   });
 
   return [...docs.filter((item) => fse.existsSync(item.path))];
-
-  // components.forEach((component) => {
-  //   docs.push({
-  //     name: formatName(component),
-  //     path: join(DOCS_DIR, component, 'README.md'),
-  //   });
-  // });
-
-  // const staticDocs = globby
-  //   .sync(normalizePath(join(DOCS_DIR, '**/*.md')))
-  //   .map((path) => {
-  //     const name = parse(path).name;
-  //     return {
-  //       name: formatName(name),
-  //       path,
-  //     };
-  //   });
-
-  // return [...staticDocs, ...docs.filter((item) => fse.existsSync(item.path))];
 }
 
 function genImportDocuments(items) {
@@ -74,8 +54,8 @@ function genExportDocuments(items) {
 }
 
 function genVantConfigContent() {
-  const content = fse.readFileSync(VDMIN_CONFIG_FILE, 'utf-8');
-  return content.replace('module.exports =', 'const config =');
+  const content = getVdminConfig();
+  return 'const config = ' + JSON.stringify(content, null, 2);
 }
 
 function genExportConfig() {
@@ -86,12 +66,13 @@ function genExportVersion() {
   return `export const packageVersion = '${getPackageJson().version}';`;
 }
 
+function genExportPaths() {
+  return `export const THEME_FILE = '${THEME_FILE}';`; 
+}
+
 export default async function genSiteDesktopShared() {
   const vdminConfig = await getVdminConfig();
   const documents = resolveDocuments(vdminConfig.site?.nav || []);
-
-  console.log(vdminConfig);
-  console.log(documents);
 
   const code = `${genImportDocuments(documents)}
 
@@ -100,6 +81,7 @@ ${genVantConfigContent()}
 ${genExportConfig()}
 ${genExportDocuments(documents)}
 ${genExportVersion()}
+${genExportPaths()}
 `;
 
   return code;

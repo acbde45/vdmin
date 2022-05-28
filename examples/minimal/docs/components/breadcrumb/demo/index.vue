@@ -2,8 +2,15 @@
   <Breadcrumb :paths="paths" />
 </template>
 
-<script setup>
+<script>
 import { ref } from "vue";
 
-const paths = ref([{ text: '产线' }, { text: '工作中心', active: true }, { text: '工位' }]);
+export default {
+  setup() {
+    const paths = ref([{ text: '产线' }, { text: '工作中心', active: true }, { text: '工位' }]);
+    return {
+      paths,
+    };
+  }
+};
 </script>

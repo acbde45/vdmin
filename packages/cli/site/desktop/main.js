@@ -1,12 +1,10 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-// import DemoPlayground from './components/DemoPlayground.vue';
 import theme from '@vdmin/docs/theme';
 import { router } from './router';
 
 const app = createApp(App)
-  .use(router)
-  // .component(DemoPlayground.name, DemoPlayground);
+  .use(router);
 
 if (theme) {
   if (theme.enhanceApp) {

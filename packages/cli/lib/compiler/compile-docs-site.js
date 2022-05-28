@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import { createServer } from 'vite';
 import {
   getViteConfigForSiteDev,
-} from '../config/vite.site.js';
+} from '../config/vite.docs-site.js';
 import { mergeCustomViteConfig } from '../common/index.js';
 
 export default async function compileDocsSite(production = false) {

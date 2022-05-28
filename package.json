@@ -1,9 +1,7 @@
 {
+  "private": true,
   "name": "vdmin",
   "version": "1.0.0",
   "description": "A Vue3 & Vite admin project cli.",
-  "main": "index.js",
-  "scripts": {
-    "minimal": "pnpm dev --dir ./examples/minimal"
-  }
+  "packageManager": "pnpm"
 }

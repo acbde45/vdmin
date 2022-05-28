@@ -1,6 +1,6 @@
 import fse from "fs-extra";
 import { createRequire } from "module";
-import { join, dirname, isAbsolute } from "path";
+import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { loadConfigFromFile } from "vite";
 

@@ -1,6 +1,7 @@
 {
-  "name": "vdmin-example-minimal",
   "root": true,
+  "private": true,
+  "name": "vdmin-example-minimal",
   "scripts": {
     "dev": "vdmin docs"
   },

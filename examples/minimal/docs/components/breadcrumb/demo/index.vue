@@ -7,7 +7,14 @@ import { ref } from "vue";
 
 export default {
   setup() {
-    const paths = ref([{ text: '产线' }, { text: '工作中心', active: true }, { text: '工位' }]);
+    const handleClick = () => {
+      alert('工作中心');
+    }
+    const paths = ref([
+      { text: '产线' },
+      { text: '工作中心', active: true, onClick: handleClick },
+      { text: '工位' }
+    ]);
     return {
       paths,
     };

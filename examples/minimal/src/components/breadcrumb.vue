@@ -20,8 +20,8 @@ export default {
             class: {
               'breadcrumb-item': true,
               active: path.active,
-              ...props
-            }
+            },
+            ...props
           },
           text
         )

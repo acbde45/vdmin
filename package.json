@@ -1,10 +1,9 @@
 {
   "private": true,
   "name": "vdmin",
-  "version": "1.0.0",
   "description": "A Vue3 & Vite admin project cli.",
-  "packageManager": "pnpm",
   "scripts": {
     "release": "node ./scripts/release.js"
-  }
+  },
+  "packageManager": "pnpm"
 }

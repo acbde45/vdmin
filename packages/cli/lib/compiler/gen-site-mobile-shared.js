@@ -62,7 +62,7 @@ function genCode(nav) {
   });
 
   demos = [...demos.filter((item) => fse.existsSync(item.path))];
-  
+
   return `${genImports(demos)}
 
 ${genExports(demos)}
@@ -74,6 +74,5 @@ export default function genSiteMobileShared() {
   const vdminConfig = getVdminConfig();
   const code = genCode(vdminConfig.site?.nav || []);
 
-  console.log(code);
   return code;
 }

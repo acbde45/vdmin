@@ -56,6 +56,7 @@ async function getVdminConfigAsync() {
     const result = await loadConfigFromFile({}, configPath, ROOT);
     return result.config;
   } catch (err) {
+    console.log(err);
     return {};
   }
 }

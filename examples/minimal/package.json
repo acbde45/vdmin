@@ -1,5 +1,6 @@
 {
   "name": "vdmin-example-minimal",
+  "root": true,
   "scripts": {
     "dev": "vdmin docs"
   },

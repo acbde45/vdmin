@@ -1,4 +1,4 @@
-import { getVdminConfig } from './constants.js';
+import { getVdminDocsConfig } from './constants.js';
 
 export function setNodeEnv(value) {
   process.env.NODE_ENV = value;
@@ -41,9 +41,9 @@ export function normalizePath(path) {
   return path.replace(/\\/g, '/');
 }
 
-export function mergeCustomViteConfig(config) {
-  const vdminConfig = getVdminConfig();
-  const configureVite = vdminConfig.build?.configureVite;
+export function mergeCustomDocsConfig(config) {
+  const vdminDocsConfig = getVdminDocsConfig();
+  const configureVite = vdminDocsConfig.build?.configureVite;
 
   if (configureVite) {
     return configureVite(config);
@@ -51,4 +51,4 @@ export function mergeCustomViteConfig(config) {
   return config;
 }
 
-export { getVdminConfig };
+export { getVdminDocsConfig };

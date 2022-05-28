@@ -1,29 +1,30 @@
 import fse from "fs-extra";
+import { createRequire } from "module";
 import { join, dirname, isAbsolute } from "path";
 import { fileURLToPath } from "url";
 import { loadConfigFromFile } from "vite";
 
 const supportedConfigExtensions = ['js', 'ts', 'mjs', 'mts'];
 
-async function findRootDir(dir) {
-  let configPath
-  for (const ext of supportedConfigExtensions) {
-    const p = join(dir, `vdmin.config.${ext}`)
-    if (await fse.pathExists(p)) {
-      configPath = p
-      break
+async function findRootDir(dir, cache) {
+  const pkgPath = join(dir, `package.json`);
+  if (await fse.pathExists(pkgPath)) {
+    const require = createRequire(import.meta.url);
+    const pkg = require(pkgPath);
+    if (pkg) {
+      cache = dir;
     }
-  }
-  if (configPath) {
-    return dir;
+    if (pkg.root) {
+      return dir;
+    }
   }
 
   const parentDir = dirname(dir);
   if (dir === parentDir) {
-    return dir;
+    return cache;
   }
 
-  return findRootDir(parentDir);
+  return findRootDir(parentDir, cache);
 }
 
 // Root paths
@@ -42,12 +43,12 @@ export function getPackageJson() {
   return JSON.parse(rawJson);
 }
 
-async function getVdminConfigAsync() {
+async function getVdminDocsConfigAsync() {
   try {
     // load user config
     let configPath
     for (const ext of supportedConfigExtensions) {
-      const p = join(ROOT, `vdmin.config.${ext}`)
+      const p = join(DOCS_DIR, `config.${ext}`)
       if (await fse.pathExists(p)) {
         configPath = p
         break
@@ -61,25 +62,8 @@ async function getVdminConfigAsync() {
   }
 }
 
-const vdminConfig = await getVdminConfigAsync();
+const vdminDocsConfig = await getVdminDocsConfigAsync();
 
-export function getVdminConfig() {
-  return vdminConfig;
+export function getVdminDocsConfig() {
+  return vdminDocsConfig;
 }
-
-function getSrcDir() {
-  const vantConfig = getVdminConfig();
-  const srcDir = vantConfig.build?.srcDir;
-
-  if (srcDir) {
-    if (isAbsolute(srcDir)) {
-      return srcDir;
-    }
-
-    return join(ROOT, srcDir);
-  }
-
-  return join(ROOT, "src");
-}
-
-export const SRC_DIR = getSrcDir();

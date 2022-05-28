@@ -2,15 +2,15 @@ import { createRequire } from "module";
 import chalk from 'chalk';
 import { createServer } from 'vite';
 import {
-  getViteConfigForSiteDev,
+  getDocsConfigForSiteDev,
 } from '../config/vite.docs-site.js';
-import { mergeCustomViteConfig } from '../common/index.js';
+import { mergeCustomDocsConfig } from '../common/index.js';
 
 export default async function compileDocsSite(production = false) {
   if (production) {
     // build
   } else {
-    const config = mergeCustomViteConfig(getViteConfigForSiteDev());
+    const config = mergeCustomDocsConfig(getDocsConfigForSiteDev());
     const server = await createServer(config);
     await server.listen();
 

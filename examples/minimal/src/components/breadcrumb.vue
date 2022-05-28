@@ -11,7 +11,7 @@ export default {
   },
   render() {
     const nodes = [];
-    this.paths.formEach((path) => {
+    this.paths.forEach((path) => {
       const { active, text, ...props } = path;
       nodes.push(
         h(

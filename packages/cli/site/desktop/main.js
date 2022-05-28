@@ -1,20 +1,17 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 // import DemoPlayground from './components/DemoPlayground.vue';
-import { THEME_FILE } from 'site-desktop-shared';
+import theme from '@vdmin/docs/theme';
 import { router } from './router';
 
 const app = createApp(App)
   .use(router)
   // .component(DemoPlayground.name, DemoPlayground);
 
-if (THEME_FILE) {
-  import(/* @vite-ignore */ THEME_FILE).then(module => {
-    const themeConfig = module.default;
-    if (themeConfig.enhanceApp) {
-      themeConfig.enhanceApp({ app });
-    }
-  });
+if (theme) {
+  if (theme.enhanceApp) {
+    theme.enhanceApp({ app });
+  }
 }
 
 

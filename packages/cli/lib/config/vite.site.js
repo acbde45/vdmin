@@ -1,11 +1,12 @@
 import { createRequire } from 'module';
+import { join } from 'path';
 import vitePluginMd from 'vite-plugin-md';
 import vitePluginVue from '@vitejs/plugin-vue';
 import vitePluginJsx from '@vitejs/plugin-vue-jsx';
 import { injectHtml } from 'vite-plugin-html';
 import hljs from 'highlight.js';
 import { setBuildTarget, getVdminConfig, isDev } from '../common/index.js';
-import { SITE_SRC_DIR } from '../common/constants.js';
+import { SITE_SRC_DIR, THEME_DIR } from '../common/constants.js';
 import genSiteMobileShared from '../compiler/gen-site-mobile-shared.js';
 import genSiteDesktopShared from '../compiler/gen-site-desktop-shared.js';
 
@@ -26,6 +27,15 @@ function getSiteConfig(config) {
   }
 
   return siteConfig;
+}
+
+function resolveAlias() {
+  return [
+    {
+      find: /^@vdmin\/docs\/theme$/,
+      replacement: join(THEME_DIR, 'index')
+    },
+  ];
 }
 
 
@@ -128,6 +138,10 @@ export function getViteConfigForSiteDev() {
 
   return {
     root: SITE_SRC_DIR,
+
+    resolve: {
+      alias: resolveAlias(),
+    },
 
     plugins: [
       vitePluginGenVdminBaseCode(),

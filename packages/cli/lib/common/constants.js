@@ -4,7 +4,6 @@ import { fileURLToPath } from "url";
 import { loadConfigFromFile } from "vite";
 
 const supportedConfigExtensions = ['js', 'ts', 'mjs', 'mts'];
-const supportedDocsConfigExtensions = ['js', 'ts'];
 
 async function findRootDir(dir) {
   let configPath
@@ -27,26 +26,11 @@ async function findRootDir(dir) {
   return findRootDir(parentDir);
 }
 
-async function findDocsConfigFile(dir, fileName) {
-  let configPath
-  for (const ext of supportedConfigExtensions) {
-    const p = join(dir, `${fileName}.${ext}`)
-    if (await fse.pathExists(p)) {
-      configPath = p
-      break
-    }
-  }
-  if (configPath) {
-    return configPath;
-  }
-  return '';
-}
-
 // Root paths
 export const CWD = process.cwd();
 export const ROOT = await findRootDir(CWD);
 export const DOCS_DIR = join(ROOT, "docs");
-export const THEME_FILE = await findDocsConfigFile(DOCS_DIR, "theme");
+export const THEME_DIR = join(DOCS_DIR, "theme");
 export const PACKAGE_JSON_FILE = join(ROOT, "package.json");
 
 // Relative paths

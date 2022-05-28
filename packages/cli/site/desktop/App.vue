@@ -6,7 +6,6 @@
       :simulator="simulator"
       :has-simulator="hasSimulator"
     >
-      <Breadcrumb />
       <router-view />
     </DocRoot>
   </div>

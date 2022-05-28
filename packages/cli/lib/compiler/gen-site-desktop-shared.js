@@ -3,7 +3,6 @@ import fse from 'fs-extra';
 import { isDev, pascalize, normalizePath } from '../common/index.js';
 import {
   DOCS_DIR,
-  THEME_FILE,
   getPackageJson,
   getVdminConfig,
 } from '../common/constants.js';
@@ -66,10 +65,6 @@ function genExportVersion() {
   return `export const packageVersion = '${getPackageJson().version}';`;
 }
 
-function genExportPaths() {
-  return `export const THEME_FILE = '${THEME_FILE}';`; 
-}
-
 export default async function genSiteDesktopShared() {
   const vdminConfig = await getVdminConfig();
   const documents = resolveDocuments(vdminConfig.site?.nav || []);
@@ -81,7 +76,6 @@ ${genVantConfigContent()}
 ${genExportConfig()}
 ${genExportDocuments(documents)}
 ${genExportVersion()}
-${genExportPaths()}
 `;
 
   return code;

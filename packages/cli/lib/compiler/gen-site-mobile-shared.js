@@ -1,6 +1,6 @@
 import { join } from 'path';
 import fse from 'fs-extra';
-import { SRC_DIR } from '../common/constants.js';
+import { DOCS_DIR } from '../common/constants.js';
 import {
   pascalize,
   removeExt,
@@ -8,6 +8,7 @@ import {
   getVdminConfig,
   normalizePath,
 } from '../common/index.js';
+import { dir } from 'console';
 
 function genImports(demos) {
   return demos
@@ -45,15 +46,23 @@ function genConfig(demos) {
   return `export const config = ${JSON.stringify(vdminConfig, null, 2)}`;
 }
 
-function genCode(components) {
-  const demos = components
-    .map((component) => ({
-      component,
-      name: pascalize(component),
-      path: join(SRC_DIR, component, 'demo/index.vue'),
-    }))
-    .filter((item) => fse.existsSync(item.path));
+function genCode(nav) {
+  let demos = [];
 
+  nav.forEach((group) => {
+    group.items.forEach((item) => {
+      demos.push(
+        {
+          component: item.path,
+          name: pascalize(item.path),
+          path: join(DOCS_DIR, group.group, item.path, 'demo/index.vue'),
+        },
+      );
+    });
+  });
+
+  demos = [...demos.filter((item) => fse.existsSync(item.path))];
+  
   return `${genImports(demos)}
 
 ${genExports(demos)}
@@ -62,8 +71,9 @@ ${genConfig(demos)}
 }
 
 export default function genSiteMobileShared() {
-  const dirs = fse.readdirSync(SRC_DIR);
-  const code = genCode(dirs);
+  const vdminConfig = getVdminConfig();
+  const code = genCode(vdminConfig.site?.nav || []);
 
+  console.log(code);
   return code;
 }

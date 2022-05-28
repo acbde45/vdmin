@@ -53,7 +53,6 @@ export default {
 .vdmin-doc-simulator {
   position: absolute;
   top: $--vdmin-doc-padding + $--vdmin-doc-header-top-height;
-  bottom: $--vdmin-doc-padding;
   right: $--vdmin-doc-padding;
   z-index: 1;
   box-sizing: border-box;

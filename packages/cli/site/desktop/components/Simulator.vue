@@ -46,8 +46,6 @@ export default {
 </script>
 
 <style lang="scss">
-@use "sass:math";
-
 @import "../../common/style/var.scss";
 
 .vdmin-doc-simulator {

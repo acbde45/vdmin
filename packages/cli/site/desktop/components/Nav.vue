@@ -71,8 +71,6 @@ export default {
 </script>
 
 <style lang="scss">
-@use "sass:math";
-
 @import "../../common/style/var";
 
 .vdmin-doc-nav {

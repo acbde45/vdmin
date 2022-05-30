@@ -43,7 +43,7 @@ export default {
   line-height: 1;
   .breadcrumb-item {
     &.active {
-      color: #386bd7;
+      color: $--primary-color;
     }
     & + .breadcrumb-item {
       padding-left: 8px;

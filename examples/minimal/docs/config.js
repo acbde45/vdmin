@@ -1,3 +1,6 @@
+const path = require('path');
+const { normalizePath, mergeConfig } = require('vite');
+
 export default {
   name: "minimal",
   site: {
@@ -26,4 +29,19 @@ export default {
       },
     ],
   },
+  build: {
+    configureVite(config) {
+      return mergeConfig(config, {
+        css: {
+          preprocessorOptions: {
+            scss: {
+              additionalData: `
+                @import '${normalizePath(path.join(__dirname, '../src'))}/styles/variables.scss';
+              `
+            },
+          }
+        }
+      }, true);
+    }
+  }
 };

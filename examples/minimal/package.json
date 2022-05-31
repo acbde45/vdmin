@@ -6,6 +6,8 @@
     "dev": "vdmin docs"
   },
   "dependencies": {
-    "@vdmin/cli": "*"
+    "@vdmin/cli": "*",
+    "vant": "^3.4.9",
+    "vue": "^3.2.36"
   }
 }

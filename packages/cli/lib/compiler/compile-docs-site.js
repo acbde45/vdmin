@@ -4,7 +4,7 @@ import { createServer } from 'vite';
 import {
   getDocsConfigForSiteDev,
 } from '../config/vite.docs-site.js';
-import { mergeCustomDocsConfig } from '../common/index.js';
+import { mergeCustomDocsConfig } from '../common/resolve-config.js';
 
 export default async function compileDocsSite(production = false) {
   if (production) {

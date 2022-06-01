@@ -5,10 +5,9 @@ import {
   pascalize,
   removeExt,
   decamelize,
-  getVdminDocsConfig,
   normalizePath,
-} from '../common/index.js';
-import { dir } from 'console';
+} from '../common/utils.js';
+import { getVdminDocsConfig } from '../common/resolve-config.js';
 
 function genImports(demos) {
   return demos

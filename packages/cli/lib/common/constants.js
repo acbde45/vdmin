@@ -2,9 +2,6 @@ import fse from "fs-extra";
 import { createRequire } from "module";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
-import { loadConfigFromFile } from "vite";
-
-const supportedConfigExtensions = ['js', 'ts', 'mjs', 'mts'];
 
 async function findRootDir(dir, cache) {
   const pkgPath = join(dir, `package.json`);
@@ -37,33 +34,3 @@ export const PACKAGE_JSON_FILE = join(ROOT, "package.json");
 // Relative paths
 const __dirname = dirname(fileURLToPath(import.meta.url));
 export const SITE_SRC_DIR = join(__dirname, "..", "..", "site");
-
-export function getPackageJson() {
-  const rawJson = fse.readFileSync(PACKAGE_JSON_FILE, "utf-8");
-  return JSON.parse(rawJson);
-}
-
-async function getVdminDocsConfigAsync() {
-  try {
-    // load user config
-    let configPath
-    for (const ext of supportedConfigExtensions) {
-      const p = join(DOCS_DIR, `config.${ext}`)
-      if (await fse.pathExists(p)) {
-        configPath = p
-        break
-      }
-    }
-    const result = await loadConfigFromFile({}, configPath, ROOT);
-    return result.config;
-  } catch (err) {
-    console.log(err);
-    return {};
-  }
-}
-
-const vdminDocsConfig = await getVdminDocsConfigAsync();
-
-export function getVdminDocsConfig() {
-  return vdminDocsConfig;
-}

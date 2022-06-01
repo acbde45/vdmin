@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import DocRoot from './components/index.vue';
+import DocRoot from './components/DocRoot.vue';
 import { config } from 'site-desktop-shared';
 
 export default {

@@ -1,16 +1,7 @@
-import { getVdminDocsConfig } from './constants.js';
+import { PACKAGE_JSON_FILE } from './constants.js';
+import { getVdminDocsConfig } from "./resolve-config.js";
 
-export function setNodeEnv(value) {
-  process.env.NODE_ENV = value;
-}
 
-export function setBuildTarget(value) {
-  process.env.BUILD_TARGET = value;
-}
-
-export function isDev() {
-  return process.env.NODE_ENV === 'development';
-}
 
 export function removeExt(path) {
   return path.replace('.js', '');
@@ -41,14 +32,4 @@ export function normalizePath(path) {
   return path.replace(/\\/g, '/');
 }
 
-export function mergeCustomDocsConfig(config) {
-  const vdminDocsConfig = getVdminDocsConfig();
-  const configureVite = vdminDocsConfig.build?.configureVite;
 
-  if (configureVite) {
-    return configureVite(config);
-  }
-  return config;
-}
-
-export { getVdminDocsConfig };

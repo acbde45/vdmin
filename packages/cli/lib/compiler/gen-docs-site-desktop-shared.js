@@ -1,11 +1,9 @@
 import { join } from 'path';
 import fse from 'fs-extra';
-import { isDev, pascalize, normalizePath } from '../common/index.js';
-import {
-  DOCS_DIR,
-  getPackageJson,
-  getVdminDocsConfig,
-} from '../common/constants.js';
+import { pascalize, normalizePath } from '../common/utils.js';
+import { DOCS_DIR } from '../common/constants.js';
+import { getPackageJson, isDev } from '../common/environment.js';
+import { getVdminDocsConfig } from '../common/resolve-config.js';
 
 function formatName(component) {
   component = pascalize(component);

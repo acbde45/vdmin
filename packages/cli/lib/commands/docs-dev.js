@@ -1,4 +1,4 @@
-import { setNodeEnv } from '../common/index.js';
+import { setNodeEnv } from '../common/environment.js';
 import compileDocsSite from '../compiler/compile-docs-site.js';
 
 export default async function docsDev() {

@@ -25,15 +25,12 @@ export default {
             path: "breadcrumb",
             title: "面包屑",
           },
-          {
-            path: "card",
-            title: "卡片",
-          },
         ],
       },
     ],
   },
   build: {
+    outDir: "../dist/docs",
     configureVite(config) {
       return mergeConfig(config, {
         css: {

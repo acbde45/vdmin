@@ -1,9 +1,9 @@
 {
   "root": true,
   "private": true,
-  "name": "vdmin-example-minimal",
+  "name": "vdmin-example-demo",
   "scripts": {
-    "dev": "vdmin docs"
+    "dev": "vdmin dev --docs --config ./docs/config.js"
   },
   "dependencies": {
     "@vdmin/cli": "*",

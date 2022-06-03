@@ -1,7 +1,3 @@
-import { PACKAGE_JSON_FILE } from './constants.js';
-import { getVdminDocsConfig } from "./resolve-config.js";
-
-
 
 export function removeExt(path) {
   return path.replace('.js', '');

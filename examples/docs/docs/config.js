@@ -2,10 +2,12 @@ const path = require('path');
 const { normalizePath, mergeConfig } = require('vite');
 
 export default {
-  name: "minimal",
+  name: "vdmin-example-demo",
   site: {
     title: "Vdmin Docs",
     description: "一个项目文档",
+  },
+  docs: {
     nav: [
       {
         title: "开发指南",
@@ -22,7 +24,7 @@ export default {
         group: "components",
         items: [
           {
-            path: "breadcrumb",
+            path: "Breadcrumb",
             title: "面包屑",
           },
         ],

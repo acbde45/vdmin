@@ -1,13 +1,10 @@
 import { createRequire } from 'module';
-import { join } from 'path';
 import vitePluginMd from 'vite-plugin-md';
 import vitePluginVue from '@vitejs/plugin-vue';
 import vitePluginJsx from '@vitejs/plugin-vue-jsx';
 import { injectHtml } from 'vite-plugin-html';
 import hljs from 'highlight.js';
-import { setBuildTarget, isDev } from '../common/environment.js';
-import { getVdminDocsConfig } from '../common/resolve-config.js';
-import { SITE_SRC_DIR, THEME_DIR } from '../common/constants.js';
+import { SITE_SRC_DIR } from '../common/constants.js';
 import genSiteMobileShared from '../compiler/gen-docs-site-mobile-shared.js';
 import genSiteDesktopShared from '../compiler/gen-docs-site-desktop-shared.js';
 
@@ -21,8 +18,9 @@ function markdownHighlight(str, lang) {
 }
 
 function getSiteConfig(config) {
-  const siteConfig = config.site;
+  const siteConfig = config?.site || {};
 
+  // TODO i18n
   if (siteConfig?.locales) {
     return siteConfig.locales[siteConfig?.defaultLang || 'en-US'];
   }
@@ -30,15 +28,14 @@ function getSiteConfig(config) {
   return siteConfig;
 }
 
-function resolveAlias() {
+function resolveAlias(context) {
   return [
     {
       find: /^@vdmin\/docs\/theme$/,
-      replacement: join(THEME_DIR, 'index')
+      replacement: context.docsThemeDir
     },
   ];
 }
-
 
 function getTitle(config) {
   let title = config?.title;
@@ -51,7 +48,7 @@ function getTitle(config) {
 }
 
 function getHTMLMeta(config) {
-  const meta = config.site?.htmlMeta;
+  const meta = config?.htmlMeta;
 
   if (meta) {
     return Object.keys(meta)
@@ -98,7 +95,7 @@ function markdownCardWrapper(htmlCode) {
     .join('');
 }
 
-function vitePluginGenVdminBaseCode() {
+function vitePluginGenVdminBaseCode(context) {
   const virtualMobileModuleId = 'site-mobile-shared';
   const resolvedMobileVirtualModuleId = `vdmin-cli:${virtualMobileModuleId}`;
 
@@ -119,9 +116,9 @@ function vitePluginGenVdminBaseCode() {
     load(id) {
       switch (id) {
         case resolvedMobileVirtualModuleId:
-          return genSiteMobileShared();
+          return genSiteMobileShared(context);
         case resolvedDesktopVirtualModuleId:
-          return genSiteDesktopShared();
+          return genSiteDesktopShared(context);
         default:
           break;
       }
@@ -129,23 +126,21 @@ function vitePluginGenVdminBaseCode() {
   };
 }
 
-export function getDocsConfigForSiteDev() {
-  setBuildTarget('site');
-
-  const docsConfig = getVdminDocsConfig();
-  const siteConfig = getSiteConfig(docsConfig);
+export function getViteConfigForDocsSiteDev(context) {
+  const config = context.config;
+  const siteConfig = getSiteConfig(config);
   const title = getTitle(siteConfig);
-  const enableVConsole = isDev() && docsConfig.site?.enableVConsole;
+  const enableVConsole = context.isDev() && siteConfig?.enableVConsole;
 
-  return {
+  const viteConfig = {
     root: SITE_SRC_DIR,
 
     resolve: {
-      alias: resolveAlias(),
+      alias: resolveAlias(context),
     },
 
     plugins: [
-      vitePluginGenVdminBaseCode(),
+      vitePluginGenVdminBaseCode(context),
       vitePluginVue({
         include: [/\.vue$/, /\.md$/],
       }),
@@ -180,7 +175,7 @@ export function getDocsConfigForSiteDev() {
           // so it needs to be written explicitly here to avoid error: description is not defined
           description: siteConfig?.description,
           enableVConsole,
-          meta: getHTMLMeta(docsConfig),
+          meta: getHTMLMeta(siteConfig),
         },
       }),
     ],
@@ -189,4 +184,6 @@ export function getDocsConfigForSiteDev() {
       host: '0.0.0.0',
     },
   };
+
+  return context.mergeCustomViteConfig(viteConfig);
 }

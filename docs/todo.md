@@ -1,3 +1,2 @@
-1. build docs
-2. hot module replace
-3. refactor config.js
+1. hot module replace
+2. refactor config.js

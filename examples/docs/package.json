@@ -3,7 +3,8 @@
   "private": true,
   "name": "vdmin-example-demo",
   "scripts": {
-    "dev": "vdmin dev --docs --config ./docs/config.js"
+    "dev": "vdmin dev --docs --config ./docs/config.js",
+    "build": "vdmin build --docs --config ./docs/config.js"
   },
   "dependencies": {
     "@vdmin/cli": "*",

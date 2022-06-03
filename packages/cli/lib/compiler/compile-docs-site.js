@@ -1,8 +1,9 @@
 import { createRequire } from "module";
 import chalk from 'chalk';
-import { createServer } from 'vite';
+import { createServer, build } from 'vite';
 import {
   getViteConfigForDocsSiteDev,
+  getViteConfigForDocsSiteProd,
 } from '../config/vite.docs-site.js';
 
 export default async function compileDocsSite(context) {
@@ -17,6 +18,7 @@ export default async function compileDocsSite(context) {
     console.log(`\n  ${viteInfo}` + chalk.green(` dev server running at:\n`));
     server.printUrls();
   } else {
-    // build
+    const config = getViteConfigForDocsSiteProd(context);
+    await build(config);
   }
 }

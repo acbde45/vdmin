@@ -43,13 +43,13 @@ export default class Content {
       const docsConfig = this.config?.docs;
       const buildConfig = this.config?.build;
       if (docsConfig?.dir) {
-        this.docsDir = normalizePath(join(this.configPath, docsConfig?.dir));
+        this.docsDir = normalizePath(join(dirname(this.configPath), docsConfig?.dir));
       }
       if (docsConfig?.themeDir) {
-        this.docsThemeDir = normalizePath(join(this.configPath, docsConfig?.themeDir));
+        this.docsThemeDir = normalizePath(join(dirname(this.configPath), docsConfig?.themeDir));
       }
       if (buildConfig?.outDir) {
-        this.outDir = normalizePath(join(this.configPath, buildConfig?.outDir));
+        this.outDir = normalizePath(join(dirname(this.configPath), buildConfig?.outDir));
       }
       delete this.then;
       return this;

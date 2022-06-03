@@ -1,4 +1,5 @@
 import { createRequire } from 'module';
+import { join } from 'path';
 import vitePluginMd from 'vite-plugin-md';
 import vitePluginVue from '@vitejs/plugin-vue';
 import vitePluginJsx from '@vitejs/plugin-vue-jsx';
@@ -187,3 +188,35 @@ export function getViteConfigForDocsSiteDev(context) {
 
   return context.mergeCustomViteConfig(viteConfig);
 }
+
+export function getViteConfigForDocsSiteProd(context) {
+  const devConfig = getViteConfigForDocsSiteDev(context);
+  const outDir = context.outDir;
+  const publicPath = context.config.build?.publicPath || '/';
+
+  const viteConfig = {
+    ...devConfig,
+    base: publicPath,
+    build: {
+      outDir,
+      brotliSize: false,
+      emptyOutDir: true,
+      // https://github.com/youzan/vant/issues/9703
+      cssTarget: ['chrome53'],
+      rollupOptions: {
+        input: {
+          main: join(SITE_SRC_DIR, 'index.html'),
+          mobile: join(SITE_SRC_DIR, 'mobile.html'),
+        },
+        output: {
+          manualChunks: {
+            'vue-libs': ['vue', 'vue-router'],
+          },
+        },
+      },
+    },
+  };
+
+  return context.mergeCustomViteConfig(viteConfig);
+}
+

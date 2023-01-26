@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "#types/*": ["./types/*"]
+    }
+  },
+  "include": [
+    "vite.config.ts",
+    "windi.config.ts",
+    "build/**/*.ts",
+    "types/**/*.d.ts",
+    "package.json"
+  ]
+}

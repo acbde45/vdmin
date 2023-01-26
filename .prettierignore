@@ -1,0 +1,16 @@
+/dist/*
+.local
+.output.js
+.vscode
+.env*
+.prettier*
+.gitignore
+.editorconfig
+pnpm-lock.yaml
+/node_modules/**
+
+**/*.svg
+**/*.sh
+
+/public/*
+/types/auto-*.d.ts

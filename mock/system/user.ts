@@ -1,4 +1,5 @@
 import Mock from 'mockjs';
+import type { MockMethod } from 'vite-plugin-mock';
 import { resultSuccess } from '../_util';
 
 const Random = Mock.Random;
@@ -40,4 +41,4 @@ export default [
       return resultSuccess(adminInfo);
     },
   },
-];
+] as MockMethod[];

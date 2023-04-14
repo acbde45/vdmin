@@ -2,16 +2,16 @@
   "compilerOptions": {
     "baseUrl": "./",
     "target": "ESNext",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
+    "useDefineForClassFields": true, // 使用 Object.defineProperty 定义 class 中的属性，而非使用 obj.key = value 的形式定义属性
+    "module": "ESNext", // 使用 ES Module 格式打包编译后的文件
     "moduleResolution": "Node",
-    "strict": true,
-    "jsx": "preserve",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "lib": ["ESNext", "DOM"],
-    "skipLibCheck": true,
+    "strict": true, // 该属性要求所有文件都是 ES Module 模块
+    "jsx": "preserve", // 保留原始的 JSX 代码，不进行编译
+    "resolveJsonModule": true, // 该属性要求所有文件都是 ES Module 模块
+    "isolatedModules": true, // 该属性要求所有文件都是 ES Module 模块
+    "esModuleInterop": true, // 允许使用 import 引入使用 export = 导出的内容
+    "lib": ["ESNext", "DOM"], // 跳过对 .d.ts 文件的类型检查
+    "skipLibCheck": true, // 跳过对 .d.ts 文件的类型检查
     "noEmit": true,
     "types": ["vite-plugin-vue-layouts/client"],
     "paths": {

@@ -1,3 +1,4 @@
+import type { MockMethod } from 'vite-plugin-mock';
 import { resultSuccess } from '../_util';
 
 const menusTree = [
@@ -94,4 +95,4 @@ export default [
       return resultSuccess(menusTree);
     },
   },
-];
+] as MockMethod[];

@@ -1,6 +1,6 @@
 import Mock from 'mockjs';
 
-export function resultSuccess(result, { message = 'ok' } = {}) {
+export function resultSuccess(result: any, { message = 'ok' } = {}) {
   return Mock.mock({
     code: 200,
     result,
@@ -65,7 +65,7 @@ export interface requestParams {
 }
 
 /**
- * 本函数用于从request数据中获取token，请根据项目的实际情况修改
+ * 本函数用于从 request 数据中获取 token，请根据项目的实际情况修改
  */
 export function getRequestToken({ headers }: requestParams): string | undefined {
   return headers?.token;
